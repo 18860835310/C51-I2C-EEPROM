@@ -25,7 +25,7 @@ key4清空当前的数字为0。
 ```
 # iic通信协议与函数
 
-## 起始信号 *iic_start()*
+## 起始与结束信号 *iic_start()* 、 *iic_stop()*
 在SCL为高电平时，SDA产生一个下降沿即为开始。
 在SCL为高电平时，SDA产生一个上降沿即为结束。
 ![Loading](I2C-EEPROM实验/image/(2)起始和停止信号.png "起始和停止信号")
