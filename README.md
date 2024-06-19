@@ -29,6 +29,68 @@ key4清空当前的数字为0。
 在SCL为高电平时，SDA产生一个下降沿即为开始。
 在SCL为高电平时，SDA产生一个上降沿即为结束。
 ![Loading](I2C-EEPROM实验/image/(2)起始和停止信号.png "起始和停止信号")
+```c
+void iic_start(void)
+{
+	IIC_SDA=1;//如果把该条语句放在SCL后面，第二次读写会出现问题
+	delay_10us(1);
+	IIC_SCL=1;
+	delay_10us(1);
+	IIC_SDA=0;	//当SCL为高电平时，SDA由高变为低
+	delay_10us(1);
+	IIC_SCL=0;//钳住I2C总线，准备发送或接收数据
+	delay_10us(1);
+}
+```
+
+```c
+void iic_stop(void)
+{	
+	IIC_SDA=0;//如果把该条语句放在SCL后面，第二次读写会出现问题
+	delay_10us(1);
+	IIC_SCL=1;
+	delay_10us(1);
+	IIC_SDA=1;	//当SCL为高电平时，SDA由低变为高
+	delay_10us(1);			
+}
+```
+
+## 应答响应与非应答
+
+![Loading](I2C-EEPROM实验/image/(3)应答响应.png "应答响应与非应答")
+
+```c
+void iic_ack(void)
+{
+	IIC_SCL=0;
+	IIC_SDA=0;	//SDA为低电平
+	delay_10us(1);
+  IIC_SCL=1;
+	delay_10us(1);
+	IIC_SCL=0;
+}
+```
+
+```c
+void iic_nack(void)
+{
+	IIC_SCL=0;
+	IIC_SDA=1;	//SDA为高电平
+	delay_10us(1);
+  IIC_SCL=1;
+	delay_10us(1);
+	IIC_SCL=0;	
+}
+```
+
+
+
+
+
+
+
+
+
 
 
 
