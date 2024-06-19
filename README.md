@@ -83,13 +83,78 @@ void iic_nack(void)
 }
 ```
 
+## 等待应答
+```c
+u8 iic_wait_ack(void)
+{
+	u8 time_temp=0;
+	
+	IIC_SCL=1;
+	delay_10us(1);
+	while(IIC_SDA)	//等待SDA为低电平
+	{
+		time_temp++;
+		if(time_temp>100)//超时则强制结束IIC通信
+		{	
+			iic_stop();
+			return 1;	
+		}			
+	}
+	IIC_SCL=0;
+	return 0;	
+}
+```
 
+## 读/写函数
 
+### 写入函数
+![Loading](I2C-EEPROM实验/image/(6)数据传输a.png "向EEPROM写数据")
+```c
+void iic_write_byte(u8 dat)
+{                        
+    u8 i=0; 
+	   	    
+    IIC_SCL=0;
+    for(i=0;i<8;i++)	//循环8次将一个字节传出，先传高再传低位
+    {              
+			if((dat&0x80)>0) 
+				IIC_SDA=1;
+			else
+				IIC_SDA=0;
+			dat<<=1; 	  
+			delay_10us(1);  
+			IIC_SCL=1;
+			delay_10us(1); 
+			IIC_SCL=0;	
+			delay_10us(1);
+    }	 
+}
+```
 
-
-
-
-
+### 读取函数
+![Loading](I2C-EEPROM实验/image/(6)数据传输b.png "从EEPROM读取数据")
+```c
+u8 iic_read_byte(u8 ack)
+{
+	u8 i=0,receive=0;
+   	
+    for(i=0;i<8;i++ )	//循环8次将一个字节读出，先读高再传低位
+		{
+        IIC_SCL=0; 
+        delay_10us(1);
+				IIC_SCL=1;
+        receive<<=1;
+        if(IIC_SDA)receive++;   
+				delay_10us(1); 
+    }					 
+    if (!ack)
+        iic_nack();
+    else
+        iic_ack();  
+		  
+    return receive;
+}
+```
 
 
 
