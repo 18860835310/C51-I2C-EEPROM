@@ -1,0 +1,8 @@
+".\Obj\main.obj",
+".\Obj\24c02.obj",
+".\Obj\iic.obj",
+".\Obj\key.obj",
+".\Obj\smg.obj",
+".\Obj\public.obj" 
+TO ".\Obj\IIC通信" 
+PRINT(".\IIC通信.m51") RAMSIZE(256) 
